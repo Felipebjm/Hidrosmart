@@ -70,9 +70,31 @@ void setup()
   tft.drawString("TEC", tft.width() / 2, tft.height() / 2 + 34 );
   tft.drawString("Para ver si corre", tft.width() / 2, tft.height() / 2 + 50); 
 
+  //Crear instancias de las zonas
+  zonas[0] = new ZonaRiego(1,HUM1_PIN,V1_PIN,2000,3000,1,00,00,1,1,00,70,true);
+  zonas[1] = new ZonaRiego(2,HUM2_PIN,V2_PIN,2000,3000,1,00,00,1,1,00,70,true);
+  zonas[2] = new ZonaRiego(3,HUM3_PIN,V3_PIN,2000,3000,1,00,00,1,1,00,70,true);    
+  for (int i = 0; i < 3; i++) zonas[i]->iniciar(); //inicia cada una de las zonas
+
+  /* Init session to Blynk server */
+  Blynk.begin(auth, ssid, pass); //Conecta el ES32 al wifi y luego al servidor de Blynk por medio del token
+  Serial.println("Blynk IoT Cloud connected..."); //Print de confirmacion
+
+  while (!blynkConnected); //Cuando blynkConnectec = true
+  Serial.println("Iniciando sincronizacion de Blynk...");
+  Blynk.syncAll(); //Le envia al dispositivo los valores actuales de los widgets de la app
+  Serial.println("Blynk sincronizado...");
+
+  //probabilidadLluvia = climaCartago.obtenerProbabilidad(); //Llama al metodo para obtener valores del API
+  probabilidadLluvia = 70;
+
+  //Habilitar los temporizadores
+  hidrosmartTimer.enable(timerConsultarClimaId);
+  hidrosmartTimer.enable(timerActualizarZonasId); 
+  delay(3000); 
 
 
-  
+
 }
 
 
