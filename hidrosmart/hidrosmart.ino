@@ -9,7 +9,10 @@
         - Mostrar probabilidad de lluvia desde Weather API
  */
 
-
+#include <SPI.h> 
+#include <TFT_eSPI.h> //Biblioteca de la pantalla
+#include <ArduinoJson.h> //Libreria para utilizar archivos json
+#include <hidrosmart.h>
 void setup()
 {
   
