@@ -9,7 +9,7 @@
 
 //Asignacion de los pines virtuales
 //Downlink son los pines que reciben datos de Blynk
-//En blynk cada widget tien un pin asociado (v0,v1,etc..)
+//En blynk cada widget tien un pin asociado (v0,v1,v2,etc..)
 #define blynk_hum1_actual 0
 #define blynk_hum2_actual 1
 #define blynk_hum3_actual 2

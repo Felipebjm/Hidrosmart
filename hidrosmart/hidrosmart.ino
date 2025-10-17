@@ -132,8 +132,10 @@ void renderDisplay()
 
 void actualizarProbabiliadLLuvia()
 {
-  //probabilidadLluvia = climaCartago.obtenerProbabilidad();
-  probabilidadLluvia = 65;
+  probabilidadLluvia = climaCartago.obtenerProbabilidad();
+
+  //Descomentar solo para asignar un valor fijo de prueba
+  //probabilidadLluvia = 65;
 };
 
 void actualizarZonas()
@@ -160,12 +162,13 @@ BLYNK_CONNECTED()
   blynkConnected = true; 
 }
 
-//Meotod que se ejecuta cuando llega un valor desde blynk
+//Metodo que se ejecuta cuando llega un valor desde blynk
 BLYNK_WRITE_DEFAULT()
 //Param: objeto con el valor enviado por blynk
-// param.asX convierte ese valor al tipo escogido
+// param.asX convierte ese valor al tipo X escogido
 {
   //Informacion obtenida de: https://docs.blynk.io/en/blynk-library-firmware-api/virtual-pins
+
   //param es un objeto que representa el valor que se recibe de la app
   int pin = request.pin; //Numero de pin virtual que cambio el dato - request contiene el pin que genero el evento
   int valueInt = param.asInt(); //Convierte el valor recibido a entero
@@ -174,6 +177,7 @@ BLYNK_WRITE_DEFAULT()
   String valueString = param.asString();
   TimeInputParam t(param); //Clase de la libreria de Blynk que permite interpretar el tiempo ingresado
   //Se crea un objeto t y interpreta el valor param
+
   Serial.printf("Blynk downlink detected.  | pin: %d | As int: %d | As float: %f | As double : %f | As String : %s\n",
             pin,valueInt,valueFloat,valueDouble,valueString);
 
@@ -224,6 +228,7 @@ BLYNK_WRITE_DEFAULT()
     //HORARIO DE RIEGO DE LAS ZONAS  
     //Llama a establecerHorario de la respectiva zona pasandole el valor enviado desde el pin respectivo
     //Primero verifica que las horas sean validas
+    //T.hasStartTime o t.hasStopTime son metodo de la clase param que retorna true o false segun la validez de la hora ingresada
     case blynk_horario1_riego:
       Serial.printf("Processing blynk_horario1_riego datastream downlink\n");
 
