@@ -30,8 +30,8 @@ const int  ACT_ZONAS_TIEMPO = 500L; //periodo en ms para actualizar zonas de rie
 //BlynkTime es una clase de la libreria de blynk
 BlynkTimer hidrosmartTimer;  //Se crea un objeto Timer para tareas periodicas
 
-TFT_eSPI tft = TFT_eSPI(135, 240); 
-WidgetRTC rtc;
+TFT_eSPI tft = TFT_eSPI(135, 240); //Crea un objeto TFT_eSPI (representa la pantalla del esp32)
+WidgetRTC rtc; //Crea un objeto WidgetRTC que permitira sincronizar la hora de Blynk con el esp32
 
 int timerRenderDisplayId;
 int timerConsultarClimaId;
@@ -55,7 +55,7 @@ void setup()
   timerConsultarClimaId = hidrosmartTimer.setInterval(WEATHER_API_QUERY_TIEMPO,actualizarProbabiliadLLuvia); //Timer para consultar al API
   hidrosmartTimer.disable(timerConsultarClimaId); //deshabilita el timer que consulta el clima
   timerActualizarZonasId = hidrosmartTimer.setInterval(ACT_ZONAS_TIEMPO,actualizarZonas); //Actualizar las zona
-  hidrosmartTimer.disable(timerConsultarClimaId);
+  hidrosmartTimer.disable(timerConsultarClimaId); //Desactiva el timer para consultar la % de lluvia
 
   //Configuracion de la pantalla
   tft.init();
@@ -91,14 +91,14 @@ void setup()
   //probabilidadLluvia = 70;
 
   //Habilitar los temporizadores
-  hidrosmartTimer.enable(timerConsultarClimaId);
+  hidrosmartTimer.enable(timerConsultarClimaId); //Actuvia de vuelta los timer
   hidrosmartTimer.enable(timerActualizarZonasId); 
   delay(3000); 
 }
 
 //Muestra datos en la pantalla 
 void renderDisplay()
-{
+{ 
   //Serial.println("< Render display >");
   tft.setTextSize(2);
   tft.fillScreen(TFT_WHITE);
@@ -160,21 +160,28 @@ BLYNK_CONNECTED()
   blynkConnected = true; 
 }
 
-BLYNK_WRITE_DEFAULT(){
+//Meotod que se ejecuta cuando llega un valor desde blynk
+BLYNK_WRITE_DEFAULT()
+//Param: objeto con el valor enviado por blynk
+// param.asX convierte ese valor al tipo escogido
+{
   //Informacion obtenida de: https://docs.blynk.io/en/blynk-library-firmware-api/virtual-pins
   //param es un objeto que representa el valor que se recibe de la app
-  int pin = request.pin;
-  int valueInt = param.asInt();
-  float valueFloat = param.asFloat();
-  double valueDouble = param.asDouble();
+  int pin = request.pin; //Numero de pin virtual que cambio el dato - request contiene el pin que genero el evento
+  int valueInt = param.asInt(); //Convierte el valor recibido a entero
+  float valueFloat = param.asFloat(); //Convierte el valor recibido a float
+  double valueDouble = param.asDouble(); //Convierte el valor recibido a double
   String valueString = param.asString();
   TimeInputParam t(param); //Clase de la libreria de Blynk que permite interpretar el tiempo ingresado
   //Se crea un objeto t y interpreta el valor param
   Serial.printf("Blynk downlink detected.  | pin: %d | As int: %d | As float: %f | As double : %f | As String : %s\n",
             pin,valueInt,valueFloat,valueDouble,valueString);
 
+  //Sistema de casos donde se recibe el pin solicitado mediante request.pin
   switch(pin) 
   {
+    //HUMEDAD MINIMA DE LAS ZONAS
+    //Llama a establecerHumMin de la respectiva zona pasandole el valor enviado desde el pin respectivo
     case blynk_hum1_min:
       Serial.printf("Processing blynk_hum1_min datastream downlink\n");
       zonas[0]->establecerHumMin(valueInt);
@@ -187,6 +194,9 @@ BLYNK_WRITE_DEFAULT(){
       Serial.printf("Processing blynk_hum3_min datastream downlink\n"); 
       zonas[2]->establecerHumMin(valueInt);
       break;
+
+    //HUMEDAD MAXIMA DE LAS ZONA  
+    //Llama a establecerHumMax de la respectiva zona pasandole el valor enviado desde el pin respectivo
     case blynk_hum1_max:
       Serial.printf("Processing blynk_hum1_max datastream downlink\n");
       zonas[0]->establecerHumMax(valueInt);
@@ -199,6 +209,8 @@ BLYNK_WRITE_DEFAULT(){
       Serial.printf("Processing blynk_hum3_max datastream downlink\n");
       zonas[2]->establecerHumMax(valueInt);
       break;
+
+    //ESTADO DE RIEGO DE LAS ZONAS  
     case blynk_estado1_riego:
       Serial.printf("Processing blynk_estado1_riego datastream downlink\n");
       break;
@@ -207,7 +219,11 @@ BLYNK_WRITE_DEFAULT(){
       break;
     case blynk_estado3_riego:
       Serial.printf("Processing blynk_estado3_riego datastream downlink\n");
-      break;      
+      break;  
+
+    //HORARIO DE RIEGO DE LAS ZONAS  
+    //Llama a establecerHorario de la respectiva zona pasandole el valor enviado desde el pin respectivo
+    //Primero verifica que las horas sean validas
     case blynk_horario1_riego:
       Serial.printf("Processing blynk_horario1_riego datastream downlink\n");
 
