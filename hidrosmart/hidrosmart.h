@@ -143,7 +143,8 @@ class ZonaRiego
     int actual = hora * 60 * 60 + minuto * 60 + segundo;
     int inicio = horaInicio * 60 * 60 + minutoInicio * 60 + segInicio;
     int fin = horaFin * 60 *60 + minutoFin * 60 + segFin;
-    return (actual >= inicio && actual <= fin); //Si la hora actual esta dentro del rango, devuelve true
+    return (actual >= inicio && actual <= fin);
+    //Si la hora actual esta dentro del rango retorna true
   };
 
   void encender() {
@@ -162,7 +163,8 @@ class ZonaRiego
 //#####################
 ///////////////////////
 
-class Clima {
+class Clima 
+{
   private:
   String url; //Direccion URL del API
 

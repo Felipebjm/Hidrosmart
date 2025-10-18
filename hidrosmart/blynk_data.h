@@ -7,6 +7,7 @@
 #define BLYNK_AUTH_TOKEN "KObwQyFNI_MoKEiU3b_OSBnk__WOF6fe"
 #define BLYNK_PRINT Serial   // Comment this out to disable prints and save space
 
+
 //Asignacion de los pines virtuales
 //Downlink son los pines que reciben datos de Blynk
 //En blynk cada widget tien un pin asociado (v0,v1,v2,etc..)

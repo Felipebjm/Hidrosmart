@@ -130,6 +130,7 @@ void renderDisplay()
 
 }
 
+
 void actualizarProbabiliadLLuvia()
 {
   probabilidadLluvia = climaCartago.obtenerProbabilidad();
